@@ -1,51 +1,59 @@
-const express = require("express");
+const express = require('express');
+const multer = require('multer');
+const ejs = require('ejs');
+const path = require('path');
 const router = express.Router();
-const multer = require("multer");
-const path = require("path");
-const helper = require("../public/javascript/helper");
 
+// Set The Storage Engine
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-
-  // By default, multer removes file extensions so let's add them back
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+  destination: './uploads/',
+  filename: function(req, file, cb){
+    cb(null, file.originalname);
   }
 });
 
-router.post("/upload-multiple-images", (req, res) => {
-  let upload = multer({
-    storage: storage,
-    fileFilter: helper.imageFilter
-  }).array("multiple_images", 10);
+// Init Upload
+const upload = multer({
+  storage: storage,
+  limits:{fileSize: 100000000},
+  fileFilter: function(req, file, cb){
+    checkFileType(file, cb);
+  }
+}).single('fileUpload');
 
+// Check File Type
+function checkFileType(file, cb){
+  // Allowed ext
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if(mimetype && extname){
+    return cb(null,true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
+
+router.post('/', (req, res) => {
   upload(req, res, (err) => {
-    if (req.fileValidationError) {
-      return res.send(req.fileValidationError);
-    } else if (!req.file) {
-      return res.send("Please select an image to upload");
-    } else if (err instanceof multer.MulterError) {
-      return res.send(err);
-    } else if (err) {
-      return res.send(err);
+    if(err){
+      res.render('index', {
+        msg: err
+      });
+    } else {
+      if(req.file == undefined){
+        res.render('index', {
+          msg: 'Error: No File Selected!'
+        });
+      } else {
+        res.render('index', {
+          msg: 'File Uploaded!',
+        });
+      }
     }
-
-    let result = "You have uploaded these images: <hr />";
-    const fles = req.files;
-    let index, len;
-
-    //Loop through all the uploaded images and display them on frontend
-    for (index = 0, len = files.length; index < len; ++index) {
-      result +=
-        '<img src="${files[index].path}" width="300" style="margin-right: 20px;">';
-    }
-    result += '<hr/><a href="./">Upload more images</a>';
-    res.send(result);
   });
 });
 
