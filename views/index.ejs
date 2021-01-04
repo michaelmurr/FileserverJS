@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fileserver</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body><!--
+    <form action="fileupload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="filetoupoad"><br>
+    <input type="submit">
+    </form>
+  -->
+<!--
+  <form ref='uploadForm' 
+      id='uploadForm' 
+      action='http://localhost:3000/upload' 
+      method='post' 
+      encType="multipart/form-data">
+        <input type="file" name="filetoupload" />
+        <input type='submit' value='Upload!' />
+  </form>     
+-->
+
+<form method="POST" action="/upload-multiple-images" enctype="multipart/form-data">
+  <div>
+      <label>Select multiple images:</label>
+      <input type="file" name="multiple_images" multiple />
+  </div>
+  <div>
+      <input type="submit" name="btn_upload_multiple_images" value="Upload" />
+  </div>
+</form>
+  
+  </body>
+</html>
