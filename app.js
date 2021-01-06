@@ -5,7 +5,6 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var multer = require("multer");
 var path = require("path");
-const helpers = require("./public/javacript/helper");
 
 var indexRouter = require("./routes/index");
 var uploadsRouter = require("./routes/uploads");
