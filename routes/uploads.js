@@ -6,20 +6,22 @@ const router = express.Router();
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
-  destination: './uploads/',
+  destination: function(req, file, cb){
+    cb(null, './uploads');
+  },
   filename: function(req, file, cb){
     cb(null, file.originalname);
   }
 });
 
 // Init Upload
-const upload = multer({
+var upload = multer({
   storage: storage,
   limits:{fileSize: 100000000},
   fileFilter: function(req, file, cb){
     checkFileType(file, cb);
   }
-}).single('fileUpload');
+}).array('fileUpload', 10);
 
 // Check File Type
 function checkFileType(file, cb){
@@ -37,20 +39,20 @@ function checkFileType(file, cb){
   }
 }
 
-router.post('/', (req, res) => {
+router.post('/upload-multiple-images', (req, res) => {
   upload(req, res, (err) => {
     if(err){
       res.render('index', {
         msg: err
       });
     } else {
-      if(req.file == undefined){
+      if(req.files == undefined){
         res.render('index', {
           msg: 'Error: No File Selected!'
         });
       } else {
         res.render('index', {
-          msg: 'File Uploaded!',
+          msg: 'File Uploaded!'
         });
       }
     }
