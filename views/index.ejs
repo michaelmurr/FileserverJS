@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8">
     <title>Fileserver</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/public/stylesheets/style.css' />
   </head>
   <body>
     <h1><%=msg %></h1>
-<form method="POST" action="/upload-multiple-images" enctype="multipart/form-data">
+<form method="POST" action="/upload" enctype="multipart/form-data">
   <div>
       <label>Select multiple images:<br></label>
       <input type="file" name="fileUpload" multiple>
@@ -16,6 +16,6 @@
       <input type="submit" name="btn_upload_multiple_images" value="Upload" />
   </div>
 </form>
-  
+<ul><%=files %></ul>
   </body>
 </html>
