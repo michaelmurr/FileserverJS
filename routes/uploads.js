@@ -20,8 +20,7 @@ var upload = multer({
   limits:{fileSize: 100000000}
 }).array('fileUpload', 10);
 
-
-router.post('/upload-multiple-images', (req, res) => {
+router.post('/upload', (req, res) => {
   upload(req, res, (err) => {
     if(err){
       res.render('index', {
