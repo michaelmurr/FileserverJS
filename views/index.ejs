@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <title>Fileserver</title>
-    <link rel='stylesheet' href='/public/stylesheets/style.css' />
-  </head>
+    <link rel='stylesheet' href='./stylesheets/style.css' />
+
   <body>
     <h1><%=msg %></h1>
 <form method="POST" action="/upload" enctype="multipart/form-data">
@@ -16,6 +16,5 @@
       <input type="submit" name="btn_upload_multiple_images" value="Upload" />
   </div>
 </form>
-<ul><%=files %></ul>
   </body>
 </html>
