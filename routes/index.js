@@ -1,7 +1,9 @@
-let express = require('express');
-let router = express.Router();
-let path = require('path');
-let fs = require('fs');
+const express = require('express');
+const router = express.Router();
+const path = require('path');
+const fs = require('fs');
+const cheerio = require('cheerio');
+const $ = cheerio.load('<h2 class="title">Hello World</h2>');
 
 router.get('/', function(req, res, next) {
   //const directoryPath = path.dirname('/mike/home/Documents/Coding/PersonalFileserver/uploads');
@@ -18,7 +20,6 @@ router.get('/', function(req, res, next) {
     console.log(files);
     res.render('index', {msg: "E", files: files});
   });
-  
 });
 
 module.exports = router;
