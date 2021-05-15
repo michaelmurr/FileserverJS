@@ -7,6 +7,11 @@
 var app = require('../app');
 var debug = require('debug')('personalfileserver:server');
 var http = require('http');
+const fs = require('fs');
+
+//Create JSON containing all uploaded Files
+
+createJSON();
 
 /**
  * Get port from environment and store in Express.
@@ -28,6 +33,23 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+//JSON creator
+function createJSON(){
+
+ const files = fs.readdirSync("./uploads").map((file, index) => {
+  
+    console.log(index, file);
+    
+    return {
+        name: file,
+    }
+  });
+
+  const output = JSON.stringify({files}, undefined, 4)
+
+  fs.writeFileSync('./files.json', output);
+}
 
 /**
  * Normalize a port into a number, string, or false.
@@ -88,3 +110,4 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
