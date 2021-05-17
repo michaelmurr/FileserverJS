@@ -2,6 +2,7 @@ const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const fs = require('fs');
+const bodyParser = require("body-parser");
 const indexRouter = require("./routes/index");
 const uploadsRouter = require("./routes/uploads");
 const downloadsRouter = require("./routes/download");
@@ -12,6 +13,8 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 app.use(indexRouter);
 app.use(uploadsRouter);
