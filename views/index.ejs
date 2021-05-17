@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+
 <html>
   <head>
     <meta charset="UTF-8">
     <title>Fileserver</title>
-    <!----><link rel='stylesheet' href='./stylesheets/style.css' />
+    <link rel='stylesheet' href='./stylesheets/style.css' />
     <style>
       body{
             background-color: #12111A;
@@ -23,6 +23,22 @@
       <input type="submit" name="btn_upload_multiple_images" value="Upload" />
   </div>
 </form>
+<div>
+  <form method="POST" action="/download">
+    <% if(fileData.length > 0) { %>
+      
+      <% fileData.forEach(fileData => { %>
+        <div>
+          <p>
+            <input type="checkbox" name="<%= fileData.name %>">
+            <%= fileData.name %>
+          </p>
+        </div>
+    <%})%>
+    <%}%>
+    <button type="submit">Download selected</button>
 
-  </body>
+</form>
+</div>
+</body>
 </html>
