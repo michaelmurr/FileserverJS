@@ -2,27 +2,18 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
-
 let dir = "./uploads";
 
 router.get('/', function(req, res, next) {
-  //const directoryPath = path.dirname('/mike/home/Documents/Coding/PersonalFileserver/uploads');
+
+   let rawData = fs.readFileSync("./files.json");
+   let fileData = JSON.parse(rawData);
   
-  //passsing directoryPath and callback function
-  fs.readdir("uploads", function (err, files) {
-
-    if(!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-      res.render('index');
-    }
-    //handling error
-    if (err) {
-      return console.log('Unable to scan directory: ' + err);
-    } 
-
+   console.log(fileData + " from GET /");
     //console.log(files);
-    res.render('index', {msg: "E", files: files});
+    res.render('index', {msg: "Hallo", fileData});
+
   });
-});
+
 
 module.exports = router;
