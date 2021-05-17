@@ -3,11 +3,14 @@ const multer = require('multer');
 const ejs = require('ejs');
 const path = require('path');
 const router = express.Router();
+const fs = require("fs");
+const { json } = require('body-parser');
+const dir = "./uploads";
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
   destination: function(req, file, cb){
-    cb(null, './uploads');
+    cb(null, dir);
   },
   filename: function(req, file, cb){
     cb(null, file.originalname);
@@ -16,25 +19,33 @@ const storage = multer.diskStorage({
 
 // Init Upload
 var upload = multer({
-  storage: storage,
-  limits:{fileSize: 100000000}
+  storage: storage
 }).array('fileUpload', 10);
 
+
+
 router.post('/upload', (req, res) => {
+  let rawData = fs.readFileSync("./files.json");
+  let fileData = JSON.parse(rawData);
+
   upload(req, res, (err) => {
     if(err){
       res.render('index', {
-        msg: err
+        msg: err, fileData
       });
     } else {
-      if(req.files == undefined){
+      if(req.files[0] == undefined){
         res.render('index', {
-          msg: 'Error: No File Selected!'
+          msg: 'Error: No File Selected!', fileData
         });
       } else {
-        res.render('index', {
-          msg: 'File Uploaded!'
+        let uploadedFiles = req.files;
+        uploadedFiles.forEach(file => {
+          fileData.push({name: file.filename});
+          fs.writeFileSync("./files.json", fileData);
+          console.log(file.filename);
         });
+        res.render('index', { msg: 'File Uploaded!', fileData });
       }
     }
   });
