@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
   
    console.log(fileData + " from GET /");
     //console.log(files);
-    res.render('index', {msg: "Hallo", fileData});
+    res.render('index', {msg: "FileServerJS", fileData});
 
   });
 
