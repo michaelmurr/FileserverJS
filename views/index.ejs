@@ -1,16 +1,20 @@
-
 <html>
   <head>
     <meta charset="UTF-8">
     <title>Fileserver</title>
-    <link rel='stylesheet' href='./stylesheets/style.css' />
+    <link href= "/public/css/styles.css" rel="stylesheet" type="text/css" />    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet"> 
     <style>
       body{
-            background-color: #12111A;
-            color: lightgray;
+            background-color: #1c1a32;
+            color: white;
+            font-family: 'Roboto', 'sans-serif';
+            font-size: 28;
+            line-height: 100%;
           }         
     </style>
-    </head>
+  </head>
 
   <body>
     <h1><%=msg %></h1>
@@ -24,19 +28,21 @@
   </div>
 </form>
 <div>
-  <form method="POST" action="/download">
-    <% if(fileData.length > 0) { %>
-      
-      <% fileData.forEach(fileData => { %>
-        <div>
-          <p>
-            <input type="checkbox" name="<%= fileData.name %>">
-            <%= fileData.name %>
-          </p>
-        </div>
-    <%})%>
-    <%}%>
-    <button type="submit">Download selected</button>
+  <form method="POST">
+    
+      <% if(fileData.length > 0) { %>
+        
+        <% fileData.forEach(fileData => { %>
+          <div>
+            <p>
+              <input type="checkbox" name="<%= fileData.name %>">
+              <%= fileData.name %>
+            </p>
+          </div>
+        <%})%>
+      <%}%>
+    <button type="submit" formaction="/delete" onclick="return confirm('Are you sure you want to delete the selected files?');">Delete</button>
+    <button type="submit" formaction="/download">Download selected</button>
 
 </form>
 </div>
