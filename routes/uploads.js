@@ -25,27 +25,31 @@ var upload = multer({
 
 
 router.post('/upload', (req, res) => {
+
   let rawData = fs.readFileSync("./files.json");
   let fileData = JSON.parse(rawData);
 
   upload(req, res, (err) => {
     if(err){
+
       res.render('index', {
         msg: err, fileData
       });
+
     } else {
+
       if(req.files[0] == undefined){
-        res.render('index', {
-          msg: 'Error: No File Selected!', fileData
-        });
+        res.render('index', { msg: 'Error: No File Selected!', fileData});
       } else {
+
         let uploadedFiles = req.files;
+
         uploadedFiles.forEach(file => {
           fileData.push({name: file.filename});
-          fs.writeFileSync("./files.json", fileData);
-          console.log(file.filename);
+          let stringifiedJSON = JSON.stringify(fileData);
+          fs.writeFileSync("./files.json", stringifiedJSON);
         });
-        res.render('index', { msg: 'File Uploaded!', fileData });
+        res.redirect("/");
       }
     }
   });
