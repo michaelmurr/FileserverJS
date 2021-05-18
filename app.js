@@ -6,19 +6,21 @@ const bodyParser = require("body-parser");
 const indexRouter = require("./routes/index");
 const uploadsRouter = require("./routes/uploads");
 const downloadsRouter = require("./routes/download");
+const deleteRouter = require("./routes/delete");
 
 const app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(express.static(path.join(__dirname, "public")));
+app.use("public", express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use(indexRouter);
 app.use(uploadsRouter);
 app.use(downloadsRouter);
+app.use(deleteRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
