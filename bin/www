@@ -50,7 +50,7 @@ function createJSON(){
     console.log(index, file);
     
     return {
-        name: file,
+        name: file
     }
   });
 
