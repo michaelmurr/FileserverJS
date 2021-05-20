@@ -1,15 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const getUploadsPath = require("../getUploadsPath");
+
+const dir = getUploadsPath();
 
 router.post("/delete", (req, res) => {
     let keys = Object.keys(req.body);
+    //remove selected files
     keys.forEach(key => {
-        fs.rmSync("./uploads/" + key);
-        console.log(key);
-        
+        fs.rmSync(dir + "/" + key);
+        console.log("Removed: " + key);
     });
-    let files = fs.readdirSync("./uploads").map((file, index) => {
+    let files = fs.readdirSync(dir).map((file, index) => {
         return {
             name: file
         }

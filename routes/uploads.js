@@ -4,8 +4,9 @@ const ejs = require('ejs');
 const path = require('path');
 const router = express.Router();
 const fs = require("fs");
-const { json } = require('body-parser');
-const dir = "./uploads";
+const getUploadsPath = require("../getUploadsPath");
+
+const dir = getUploadsPath();
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
@@ -22,8 +23,6 @@ var upload = multer({
   storage: storage
 }).array('fileUpload', 10);
 
-
-
 router.post('/upload', (req, res) => {
 
   let rawData = fs.readFileSync("./files.json");
@@ -31,11 +30,8 @@ router.post('/upload', (req, res) => {
 
   upload(req, res, (err) => {
     if(err){
-
-      res.render('index', {
-        msg: err, fileData
-      });
-
+      //render error
+      res.render('index', {msg: err, fileData });
     } else {
 
       if(req.files[0] == undefined){
@@ -44,7 +40,8 @@ router.post('/upload', (req, res) => {
 
         let uploadedFiles = req.files;
 
-        uploadedFiles.forEach(file => {
+        req.files.forEach(file => {
+          //push properties of newly uploaded files to files.json and redirect to index page
           fileData.push({name: file.filename});
           let stringifiedJSON = JSON.stringify(fileData);
           fs.writeFileSync("./files.json", stringifiedJSON);
