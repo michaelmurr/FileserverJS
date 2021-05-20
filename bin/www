@@ -8,7 +8,9 @@ var app = require('../app');
 var debug = require('debug')('personalfileserver:server');
 var http = require('http');
 const fs = require('fs');
-const dir = "./uploads"
+const getUploadsPath = require('../getUploadsPath');
+
+const dir = getUploadsPath();
 
 //Create JSON containing all uploaded Files
 doesUploadsExist();
@@ -35,17 +37,23 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-//check if /uploads dir exists
+//check if path in 'const dir' exists
 function doesUploadsExist(){
+  if(dir === "<specify path here>"){
+    
+    console.log("\x1b[41m", "\x1b[1m", "\x1b[37m", "----------Please specify path in <uploadsConfig.json>----------", "\x1b[0m");
+    process.exit(0);
+  }
+  
   if(!fs.existsSync(dir)){
     fs.mkdirSync(dir);
   }
 }
 
-//JSON creator
+//returns each file's name into an array and writes it to files.json
 function createJSON(){
 
- const files = fs.readdirSync("./uploads").map((file, index) => {
+ const files = fs.readdirSync(dir).map((file, index) => {
   
     console.log(index, file);
     
@@ -54,9 +62,8 @@ function createJSON(){
     }
   });
 
-const output = JSON.stringify(files, undefined, 4)
-
-  fs.writeFileSync('./files.json', output);
+const output = JSON.stringify(files, undefined, 4);
+fs.writeFileSync('./files.json', output);
 }
 
 /**
