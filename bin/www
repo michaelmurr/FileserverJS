@@ -41,7 +41,12 @@ server.on('listening', onListening);
 function doesUploadsExist(){
   if(dir === "<specify path here>"){
     
-    console.log("\x1b[41m", "\x1b[1m", "\x1b[37m", "----------Please specify path in <uploadsConfig.json>----------", "\x1b[0m");
+    console.log("\x1b[41m", 
+    "\x1b[1m", 
+    "\x1b[37m", 
+    "----------Please specify path in <uploadsConfig.json>----------", 
+    "\x1b[0m"
+    );
     process.exit(0);
   }
   
@@ -55,10 +60,12 @@ function createJSON(){
 
  const files = fs.readdirSync(dir).map((file, index) => {
   
-    console.log(index, file);
+    let stats= fs.statSync(dir + "/" + file);
+    console.log("Size: " + stats.size / 1000);
     
     return {
-        name: file
+        name: file,
+        fileSize: stats.size / 1000
     }
   });
 
