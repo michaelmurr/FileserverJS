@@ -13,13 +13,15 @@ router.post("/delete", (req, res) => {
         console.log("Removed: " + key);
     });
     let files = fs.readdirSync(dir).map((file, index) => {
+    let stats = fs.statSync(dir + "/" + file);
         return {
-            name: file
+            name: file,
+            fileSize: stats.size
         }
     });
     const output = JSON.stringify(files, undefined, 4)
     fs.writeFileSync('./files.json', output);
-    //res.render("index", {msg: "File(s) deleted!", files});
+    
     res.redirect("/");
 });
 
