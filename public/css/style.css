@@ -1,0 +1,13 @@
+html{
+    background-color: #333333;
+    color: white;
+    font-family: 'Roboto', 'sans-serif';
+    font-size: 28;
+    line-height: 100%;
+    padding-left:2em;
+
+  } 
+.submit_btns{
+  margin: 0.3em;
+}        
+    

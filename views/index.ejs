@@ -1,35 +1,52 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Fileserver</title>
-    <link href= "/public/css/styles.css" rel="stylesheet" type="text/css" />    
+    <meta name="viewport" content="width=device-width, intitial-scale=1">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet"> 
-    <style>
-      body{
-            background-color: #1c1a32;
-            color: white;
-            font-family: 'Roboto', 'sans-serif';
-            font-size: 28;
-            line-height: 100%;
-          }         
-    </style>
+    
+    <title>Fileserver</title>
+    <link href= "/css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   </head>
 
   <body>
     <h1><%=msg %></h1>
-<form method="POST" action="/upload" enctype="multipart/form-data">
-  <div>
-      <label>Select multiple images:<br></label>
+
+<form method="POST" action="/upload" enctype="multipart/form-data" id="uploadForm">
+  <div class="submit_btns">
+      <label>Select files:<br></label>
       <input type="file" name="fileUpload" multiple>
+    </div>
+    <div class="submit_btns">
+      <input type="submit" name="uploadMultipleFiles" value="Submit" />
   </div>
-  <div>
-      <input type="submit" name="btn_upload_multiple_images" value="Upload" />
-  </div>
+
 </form>
+
+<!--
+<span id="status">0</span>% Uploaded
+
+
+
+  <div class="w3-container">
+    
+    <div class="w3-light-grey">
+      <div id="myBar" class="w3-container w3-blue" style="height:24px;width:20%"></div>
+    </div>
+    
+    <p id="demo">20%</p>
+    <button class="w3-button w3-blue" onclick="moveBar()">Click meh</button>
+  </div>
+-->
+
+
+
+
 <div>
   <form method="POST">
-    
+    <div class="yeet">
+
       <% if(fileData.length > 0) { %>
         
         <% fileData.forEach(fileData => { %>
@@ -41,11 +58,45 @@
               <%= fileData.fileSize %> <label>KB</label>
             </p>
           </div>
-        <%})%>
-      <%}%>
+          <%})%>
+          <%}%>
+        </div>
     <button type="submit" formaction="/delete" onclick="return confirm('Are you sure you want to delete the selected files?');">Delete</button>
     <button type="submit" formaction="/download">Download selected</button>
 
+    <!--<script src="../public/javascript/uploadBarHandler.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11/jquery.min.js"></script>
+    <!--<script>
+      function moveBar(){
+    var elem = document.getElementById("myBar");
+    var width = 20;
+    var id = setInterval(frame, 10);
+    function frame(){
+      if(width>=100){
+        clearInterval(id);
+      }else{
+        width++;
+        elem.style.width = width + "%";
+        document.getElementById("demo").innerHTML = width * 1 + "%";
+      }
+    }
+  }
+    </script>-->
+    <script>
+      let $status = $("#status");
+
+      $("form").on("submit", () => {
+        let longPoll = setInterval(() => {
+          $.get("/upload").then((status) => {
+            $status.text(status);
+
+            if(parseInt(status) === 100){
+              clearInterval(longPoll);
+            }
+          });
+        });
+      }); 
+    </script>
 </form>
 </div>
 </body>
