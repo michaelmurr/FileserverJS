@@ -61,11 +61,11 @@ function createJSON(){
  const files = fs.readdirSync(dir).map((file, index) => {
   
     let stats= fs.statSync(dir + "/" + file);
-    console.log("Size: " + stats.size / 1000);
+    console.log("Size: " + stats.size + " Bytes");
     
     return {
         name: file,
-        fileSize: stats.size / 1000
+        fileSize: stats.size
     }
   });
 
