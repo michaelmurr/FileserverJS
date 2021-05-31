@@ -5,6 +5,7 @@ const path = require('path');
 const router = express.Router();
 const fs = require("fs");
 const getUploadsPath = require("../getUploadsPath");
+const convertDataUnit = require('../convertDataUnit');
 
 const dir = getUploadsPath();
 
@@ -44,12 +45,13 @@ router.post('/upload', (req, res) => {
           //push properties of newly uploaded files to files.json and redirect to index page
           fileData.push({
                         name: file.filename,
-                        fileSize: stats.size
+                        fileSize: convertDataUnit(dir, file.filename)
                         });
           fs.writeFileSync("./files.json", JSON.stringify(fileData));
 
         });
-        res.render("index", {msg: "Upload successful!", fileData});
+        
+          res.render("index", {msg: "Upload successful!", fileData});
       }
     }
   });
