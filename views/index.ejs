@@ -2,102 +2,88 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, intitial-scale=1">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet"> 
-    
-    <title>Fileserver</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet"> 
     <link href= "/css/style.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <title>FileserverJS</title>
   </head>
-
+  
   <body>
-    <h1><%=msg %></h1>
+    <div class="wrapper">
+      <div class="h1wrapper">
+        <h1><%= msg  %></h1>
+      </div>
 
-<form method="POST" action="/upload" enctype="multipart/form-data" id="uploadForm">
-  <div class="submit_btns">
-      <label>Select files:<br></label>
-      <input type="file" name="fileUpload" multiple>
-    </div>
-    <div class="submit_btns">
-      <input type="submit" name="uploadMultipleFiles" value="Submit" />
-  </div>
-
-</form>
-
-<!--
-<span id="status">0</span>% Uploaded
-
-
-
-  <div class="w3-container">
-    
-    <div class="w3-light-grey">
-      <div id="myBar" class="w3-container w3-blue" style="height:24px;width:20%"></div>
-    </div>
-    
-    <p id="demo">20%</p>
-    <button class="w3-button w3-blue" onclick="moveBar()">Click meh</button>
-  </div>
--->
-
-
-
-
-<div>
-  <form method="POST">
-    <div class="yeet">
-
-      <% if(fileData.length > 0) { %>
+      <div class="actionBtns">
+      <form method="POST" action="/upload" enctype="multipart/form-data" id="uploadForm">
+          <input type="file" name="fileUpload" id="realFileinput" hidden="hidden" multiple>
+          <button type="button" id="fileinputBtn" class="uploadFormBtns">Choose a file</button>
+          <span id="filenamesSpan">No files chosen</span>
+          <button type="submit" id="submit-upload-btn" class="uploadFormBtns">Start Uploading</button>
+          
+        </form>
         
-        <% fileData.forEach(fileData => { %>
-          <div>
-            <p>
-              <input type="checkbox" name="<%= fileData.name %>">
-              <%= fileData.name %>
-              <br>
-              <%= fileData.fileSize %> <label>KB</label>
-            </p>
-          </div>
-          <%})%>
-          <%}%>
+        <form method="POST">
+          <button type="submit" formaction="/download">Download</button>
+          <button type="submit" formaction="/delete" onclick="return confirm('Are you sure you want to delete the selected files? This action can NOT be undone!');">Delete</button>
         </div>
-    <button type="submit" formaction="/delete" onclick="return confirm('Are you sure you want to delete the selected files?');">Delete</button>
-    <button type="submit" formaction="/download">Download selected</button>
-
-    <!--<script src="../public/javascript/uploadBarHandler.js"></script>-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11/jquery.min.js"></script>
-    <!--<script>
-      function moveBar(){
-    var elem = document.getElementById("myBar");
-    var width = 20;
-    var id = setInterval(frame, 10);
-    function frame(){
-      if(width>=100){
-        clearInterval(id);
-      }else{
-        width++;
-        elem.style.width = width + "%";
-        document.getElementById("demo").innerHTML = width * 1 + "%";
-      }
-    }
-  }
-    </script>-->
-    <script>
-      let $status = $("#status");
-
-      $("form").on("submit", () => {
-        let longPoll = setInterval(() => {
-          $.get("/upload").then((status) => {
-            $status.text(status);
-
-            if(parseInt(status) === 100){
-              clearInterval(longPoll);
-            }
-          });
-        });
-      }); 
-    </script>
-</form>
+          <table>
+            <tr>
+              <th>Filename</th>              
+              <th>Filesize</th>
+            </tr>
+            <% if(fileData.length > 0) { %>
+              <%fileData.forEach(element => {%>
+                <tr>
+                  <td>
+                    <label class="checkbox-container">
+                      <input type="checkbox" name="<%= element.name%>">
+                      <%= element.name%>
+                    </label>
+                  </td>
+                  <td>
+                    <%=element.fileSize%>
+                  </td>
+                </tr>
+                <%})%>
+                <%}%>
+              </table>
+              </form>
 </div>
+<script>
+    const realInputBtn = document.getElementById("realFileinput");
+    const customBtn = document.getElementById("fileinputBtn");
+    const filenamesSpan = document.getElementById("filenamesSpan");
+    
+    customBtn.addEventListener("click", () => {
+      realInputBtn.click();
+      
+      realInputBtn.addEventListener("change", () => {
+        var files = document.getElementById("realFileinput").files;
+        let filenameString = "";
+        
+        for(var i = 0; i < files.length; i++){
+          //append the filenames to string
+          filenameString = filenameString + files[i].name;
+          
+          //if current files element is not the last, add a comma and whitespace to it
+          if(i != files.length - 1){
+            filenameString += ", ";
+          }
+        }
+        //add string that includes all names to span element
+        filenamesSpan.innerHTML = filenameString;
+        const submitUploadBtn = document.querySelector("#submit-upload-btn").style.display = "inline-block";
+
+      });
+    });
+
+
+  </script>
 </body>
 </html>

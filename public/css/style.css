@@ -1,13 +1,109 @@
-html{
-    background-color: #333333;
-    color: white;
-    font-family: 'Roboto', 'sans-serif';
-    font-size: 28;
-    line-height: 100%;
-    padding-left:2em;
+body{
+  background-color: #333;
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
 
-  } 
-.submit_btns{
-  margin: 0.3em;
-}        
-    
+.wrapper{
+ /* width: 90%;*/
+  margin: auto;
+}
+
+h1{
+  font-size: 4em;
+  margin: 0.5em 0 0.5em 0;
+  text-decoration: 11px underline #7d9438;
+}
+
+div.h1wrapper{
+  border-left: 11px solid #7d9438;
+  margin-left: 5%;
+}
+button{
+  background-color: #7d9438;
+  color: white;
+  border: none;
+  border-radius: 0.2em;
+  font-size: 26px;
+}
+#uploadBTN{
+  margin-left: 5%;
+}
+
+button:hover{
+  background-color:  #6b7c31;
+}
+
+table{
+  margin-left: 5%;
+}
+td, th{
+  font-size: 1.5em;
+  padding: 40px;
+  border-bottom: 1px solid gray;
+  width: auto !important;
+}
+
+label{
+  cursor: pointer;
+  font-size: 26px;
+}
+
+input[type="checkbox"]{
+  appearance: none;
+  -webkit-appearance: none;
+  height: 35px;
+  width: 35px;
+  background: #FFF;
+  border: 2px solid #FFF;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f00c";
+  padding-left: 3px;
+  color: white;
+  display: inline;
+}
+input[type="checkbox"]:hover{
+  background-color: #7F7F7F;
+  border: 2px solid #7F7F7F;
+}
+
+input[type="checkbox"]:checked{
+  background-color: #7d9438;
+  border: 2px solid #7d9438;
+}
+
+input[type="checkbox"]:checked:hover{
+  background-color: #6b7c31;
+  border: 2px solid #6b7c31;
+}
+
+input[type="checkbox"]:checked:after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f00c";
+  font-size: 26px;
+  padding-left: 3px;
+}
+
+#custom-text{
+  margin: 10px;
+}
+
+#submit-upload-btn{
+  display:none;
+}
+
+.actionBtns{
+  width: 90%;  
+  margin: auto;
+}
+
+fileinputBtn{
+  display: inline-block;
+}
