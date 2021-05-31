@@ -9,6 +9,7 @@ var debug = require('debug')('personalfileserver:server');
 var http = require('http');
 const fs = require('fs');
 const getUploadsPath = require('../getUploadsPath');
+const convertDataUnit = require("../convertDataUnit");
 
 const dir = getUploadsPath();
 
@@ -58,14 +59,11 @@ function doesUploadsExist(){
 //returns each file's name into an array and writes it to files.json
 function createJSON(){
 
- const files = fs.readdirSync(dir).map((file, index) => {
-  
-    let stats= fs.statSync(dir + "/" + file);
-    console.log("Size: " + stats.size + " Bytes");
-    
+ const files = fs.readdirSync(dir).map((file) => {
+
     return {
         name: file,
-        fileSize: stats.size
+        fileSize: convertDataUnit(dir, file)
     }
   });
 
