@@ -6,15 +6,22 @@ const router = express.Router();
 const fs = require("fs");
 const getUploadsPath = require("../getUploadsPath");
 const convertDataUnit = require('../convertDataUnit');
+const scanDir = require('../scanDir');
 
 const dir = getUploadsPath();
+let fileData = scanDir(dir);
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
-  destination: function(req, file, cb){
+  destination: function (req, file, cb) {
     cb(null, dir);
   },
-  filename: function(req, file, cb){
+  filename: function (req, file, cb) {
+    fileData.forEach(element => {
+      if (element.name === file.originalname){
+        cb(new Error (file.originalname + " already exists!"));
+      }
+    });
     cb(null, file.originalname);
   }
 });
@@ -22,36 +29,30 @@ const storage = multer.diskStorage({
 // Init Upload
 var upload = multer({
   storage: storage
-}).array('fileUpload', 10);
+}).array('fileUpload');
 
 router.post('/upload', (req, res) => {
 
-  let rawData = fs.readFileSync("./files.json");
-  let fileData = JSON.parse(rawData);
-  
+
   upload(req, res, (err) => {
-    if(err){
+    if (err) {
       //render error
-      res.render('index', {msg: err, fileData });
+      res.render('index', { msg: err, fileData });
     } else {
-      
-      if(req.files[0] == undefined){
-        res.render('index', { msg: 'Error: No File Selected!', fileData});
+
+      if (req.files[0] == undefined) {
+        res.render('index', { msg: 'Error: No File Selected!', fileData });
       } else {
+
         req.files.forEach(file => {
-
-          let stats = fs.statSync(dir + "/" + file.filename);
-
-          //push properties of newly uploaded files to files.json and redirect to index page
+          
           fileData.push({
-                        name: file.filename,
-                        fileSize: convertDataUnit(dir, file.filename)
-                        });
-          fs.writeFileSync("./files.json", JSON.stringify(fileData));
-
+            name: file.filename,
+            fileSize: convertDataUnit(dir, file.filename)
+          });
         });
-        
-          res.render("index", {msg: "Upload successful!", fileData});
+
+        res.render("index", { msg: "Upload successful!", fileData });
       }
     }
   });
