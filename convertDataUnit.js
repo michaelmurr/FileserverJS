@@ -5,8 +5,6 @@ const fs = require("fs");
 const convertDataUnit = function(dir, fileName){
     let stats= fs.statSync(dir + "/" + fileName);
 
-    console.log("Size: " + stats.size + " Bytes");
-    
     if(stats.size / 1000000000 > 1){
       return (stats.size / 1000000000).toFixed(1) + " GB";
     }else if(stats.size / 1000000 > 1){
