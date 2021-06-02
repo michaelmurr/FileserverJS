@@ -15,7 +15,7 @@ const dir = getUploadsPath();
 
 //Create JSON containing all uploaded Files
 doesUploadsExist();
-createJSON();
+//createJSON();
 
 /**
  * Get port from environment and store in Express.
