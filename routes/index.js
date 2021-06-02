@@ -2,13 +2,16 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
+const scanDir = require('../scanDir');
+const getUploadsPath = require("../getUploadsPath");
+
+const dir = getUploadsPath();
 
 router.get('/', function(req, res, next) {
 
-  //read JSON that holds properties of files and 
+  //read gets JSON object that holds properties of files and 
   //renders it on page
-   let rawData = fs.readFileSync("./files.json");
-   let fileData = JSON.parse(rawData);
+   let fileData = scanDir(dir);
    
    res.render('index', {msg: "FileServerJS", fileData});
   });
