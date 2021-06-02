@@ -1,5 +1,5 @@
 const fs = require("fs");
-const configPath = ("./uploadsConfig.json");
+const configPath = (__dirname + "/uploadsConfig.json");
 
 const getUploadsPath = function(){
     let PathObj = JSON.parse(fs.readFileSync(configPath));
