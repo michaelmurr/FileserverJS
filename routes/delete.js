@@ -16,8 +16,10 @@ router.post("/delete", (req, res) => {
         console.log("Removed: " + key);
     });
     let fileData = scanDir(dir);
+    let diskStats = getDiskSpace();
+    let stringifiedStats = JSON.stringify(diskStats);
 
-    res.render("index", {msg: "Files removed!" , fileData});
+    res.render("index", {msg: "Files removed!" , fileData, diskStats: stringifiedStats});
 });
 
 module.exports = router;

@@ -32,16 +32,17 @@ var upload = multer({
 }).array('fileUpload');
 
 router.post('/upload', (req, res) => {
-
+  let diskStats = getDiskSpace();
+  let stringifiedStats = JSON.stringify(diskStats);
 
   upload(req, res, (err) => {
     if (err) {
       //render error
-      res.render('index', { msg: err, fileData });
+      res.render('index', { msg: err, fileData, diskStats: stringifiedStats });
     } else {
 
       if (req.files[0] == undefined) {
-        res.render('index', { msg: 'Error: No File Selected!', fileData });
+        res.render('index', { msg: 'Error: No File Selected!', fileData, diskStats: stringifiedStats });
       } else {
 
         req.files.forEach(file => {
@@ -51,8 +52,9 @@ router.post('/upload', (req, res) => {
             fileSize: convertDataUnit(dir, file.filename)
           });
         });
-
-        res.render("index", { msg: "Upload successful!", fileData });
+        diskStats = getDiskSpace();
+        stringifiedStats = JSON.stringify(diskStats);
+        res.render("index", { msg: "Upload successful!", fileData, diskStats: stringifiedStats });
       }
     }
   });

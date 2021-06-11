@@ -9,6 +9,9 @@ const dir = getUploadsPath();
 let fileData = scanDir(dir);
 
 router.post('/download', function(req, res) {
+   let diskStats = getDiskSpace();
+   let stringifiedStats = JSON.stringify(diskStats);
+
     console.log("Download request recieved!");
     let keys = Object.keys(req.body);
     if(keys.length > 0){
@@ -22,12 +25,12 @@ router.post('/download', function(req, res) {
 
         if(downloadFileArray[0] != undefined ){
             res.zip(downloadFileArray);
-            res.render("index", {msg: "Download starting...", fileData})
+            res.render("index", {msg: "Download starting...", fileData, diskStats: stringifiedStats})
         }
 
     }else{
         console.log("Download: No files selected!");
-        res.render("index", {msg: "No files selected!", fileData});
+        res.render("index", {msg: "No files selected!", fileData, diskStats: stringifiedStats});
     }
 });
 
