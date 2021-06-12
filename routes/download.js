@@ -24,8 +24,7 @@ router.post('/download', function(req, res) {
         });
 
         if(downloadFileArray[0] != undefined ){
-            res.zip(downloadFileArray);
-            res.end();
+        res.zip(downloadFileArray);
         }
     }else{
         console.log("Download: No files selected!");
