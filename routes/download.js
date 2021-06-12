@@ -3,12 +3,12 @@ var router = express.Router();
 const zip = require("express-zip");
 const getUploadsPath = require("../getUploadsPath");
 const scanDir = require('../scanDir');
+const getDiskSpace = require("../getDiskSpace");
 
 const dir = getUploadsPath();
 
-let fileData = scanDir(dir);
-
 router.post('/download', function(req, res) {
+    let fileData = scanDir(dir);
    let diskStats = getDiskSpace();
    let stringifiedStats = JSON.stringify(diskStats);
 
@@ -25,9 +25,8 @@ router.post('/download', function(req, res) {
 
         if(downloadFileArray[0] != undefined ){
             res.zip(downloadFileArray);
-            res.render("index", {msg: "Download starting...", fileData, diskStats: stringifiedStats})
+            res.end();
         }
-
     }else{
         console.log("Download: No files selected!");
         res.render("index", {msg: "No files selected!", fileData, diskStats: stringifiedStats});

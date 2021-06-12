@@ -7,6 +7,7 @@ const fs = require("fs");
 const getUploadsPath = require("../getUploadsPath");
 const convertDataUnit = require('../convertDataUnit');
 const scanDir = require('../scanDir');
+const getDiskSpace = require("../getDiskSpace");
 
 const dir = getUploadsPath();
 let fileData = scanDir(dir);
@@ -32,6 +33,7 @@ var upload = multer({
 }).array('fileUpload');
 
 router.post('/upload', (req, res) => {
+  fileData = scanDir(dir);
   let diskStats = getDiskSpace();
   let stringifiedStats = JSON.stringify(diskStats);
 
@@ -49,7 +51,7 @@ router.post('/upload', (req, res) => {
           
           fileData.push({
             name: file.filename,
-            fileSize: convertDataUnit(dir, file.filename)
+            filesize: convertDataUnit(dir, file.filename)
           });
         });
         diskStats = getDiskSpace();
