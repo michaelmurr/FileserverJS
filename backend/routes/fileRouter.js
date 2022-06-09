@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import multer from "multer";
 import express from "express";
-const zip = require("express-zip");
+import zip from "express-zip";
 import prettyBytes from "pretty-bytes";
 
 import File from "../models/fileSchema.js";
@@ -95,14 +95,8 @@ router.post("/download", function (req, res) {
     }
   } else {
     console.log("Download: No files selected!");
-    res.render("index", {
-      msg: "No files selected!",
-      fileData,
-      diskStats: stringifiedStats,
-    });
+    res.send({ message: "No files selected!" });
   }
 });
-
-module.exports = router;
 
 export default router;

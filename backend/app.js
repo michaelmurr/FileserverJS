@@ -10,7 +10,7 @@ import bodyParser from "body-parser";
 import path, { dirname } from "path";
 
 import testRouter from "./routes/testRouter.js";
-import uploadRouter from "./routes/fileRouter.js";
+import fileRouter from "./routes/fileRouter.js";
 
 const PORT = process.env.PORT || 4000;
 const totalCores = os.cpus().length;
