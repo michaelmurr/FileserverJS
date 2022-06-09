@@ -1,8 +1,4 @@
-uploadsConfig.json
-/node_modules/*
-/uploads/*
-files.json
-backend/node_modules
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
 frontend/node_modules
@@ -25,5 +21,3 @@ frontend/.env.production.local
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
-
-uploads
