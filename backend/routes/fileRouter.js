@@ -4,6 +4,7 @@ import multer from "multer";
 import express from "express";
 import zip from "express-zip";
 import prettyBytes from "pretty-bytes";
+import mongoose from "mongoose";
 
 import File from "../models/fileSchema.js";
 import getUploadsPath from "../getUploadsPath.js";
@@ -14,7 +15,7 @@ const dir = getUploadsPath();
 //multers docs dont specify what cb means, so i got the following text from stackoverflow
 //https://stackoverflow.com/a/59394810
 
-// "This callback is a so called error-first function, thus when examining the req, or file you
+// "This callback is a so called error-first function, thus when examining the req, or item you
 // may decide, that user uploaded something wrong, pass new Error() as first argument, and it
 // will be returned in response. Note though, that it will raise an unhandled exception in your
 // app. So I prefer to always pass null and handle user input in the corresponding controller.""
@@ -24,12 +25,11 @@ const dir = getUploadsPath();
 //setting up multer
 const storage = multer.diskStorage({
   destination: dir,
-  filename: function (req, file, cb) {
-    if (fs.existsSync(path.join(dir, file.originalname))) {
-      cb(new Error(file.originalname + " already exists!"));
+  filename: function (req, item, cb) {
+    if (fs.existsSync(path.join(dir, item.originalname))) {
+      cb(new Error(item.originalname + " already exists!"));
     } else {
-      cb(null, file.originalname);
-      console.log(dir);
+      cb(null, item.originalname);
     }
   },
 });
@@ -45,12 +45,12 @@ router.post("/upload", async (req, res) => {
 
     req.files.forEach((element) => {
       try {
-        const file = new File({
+        const item = new File({
           fileName: element.filename,
           fileSize: prettyBytes(fs.statSync(dir + "/" + element.filename).size),
         });
 
-        file.save();
+        item.save();
       } catch (err) {
         console.log(err);
         return res.status(500).send({ message: err });
@@ -59,6 +59,13 @@ router.post("/upload", async (req, res) => {
 
     return res.status(200).send({ message: "Worked" });
   });
+});
+
+//Handle getting Files
+//
+router.get("/files", async (req, res) => {
+  const files = await File.find({});
+  res.status(200).send(files);
 });
 
 //Handle deletion
@@ -78,15 +85,15 @@ router.post("/delete", (req, res) => {
 
 //Handle Download
 //
-router.post("/download", function (req, res) {
-  console.log("Download request recieved!");
+router.post("/download", (req, res) => {
+  console.log(req.body);
 
-  let keys = Object.keys(req.body);
+  let keys = Object.values(req.body);
   if (keys.length > 0) {
-    let downloadFileArray = keys.map((file) => {
+    let downloadFileArray = keys.map((item) => {
       return {
-        path: dir + "/" + file,
-        name: file,
+        path: dir + "/" + item,
+        name: item,
       };
     });
 

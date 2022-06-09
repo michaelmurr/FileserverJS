@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Form, Button } from "react-bootstrap";
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 export default function Upload() {
   const [fileUpload, setFileUpload] = useState("");
@@ -19,38 +19,21 @@ export default function Upload() {
     });
   };
   return (
-    <div className="container">
+    <div className="uploadContainer">
       <div className="row">
-        <form onSubmit={onSubmit} encType="multipart/form-data" action="">
-          <div className="form-group">
-            <input
+        <Form onSubmit={onSubmit} encType="multipart/form-data" action="">
+          <Form.Group controlId="formFileMultiple" className="mb-3">
+            <Form.Label>Upload Files</Form.Label>
+            <Form.Control
               type="file"
               name="fileUpload"
               onChange={onFileChange}
               multiple
             />
-          </div>
-          <div className="form-group">
-            <button className="btn btn-primary" type="submit">
-              Upload
-            </button>
-          </div>
-        </form>
-      </div>
-      {/*
-        <Form onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
-          <Form.Group controlId="formFileMultiple" className="mb-3">
-            <Form.Label>Upload Files</Form.Label>
-            <Form.Control
-              type="file"
-              multiple
-              {...register("file")}
-              name="fileUpload"
-            />
           </Form.Group>
           <Button type="submit">Upload</Button>
         </Form>
-*/}
+      </div>
     </div>
   );
 }
