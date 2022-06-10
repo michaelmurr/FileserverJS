@@ -1,9 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, ProgressBar } from "react-bootstrap";
 import React, { useState } from "react";
 import axios from "axios";
+
 export default function Upload() {
   const [fileUpload, setFileUpload] = useState("");
+  const [progress, setProgress] = useState();
 
   const onFileChange = (e) => {
     setFileUpload(e.target.files);
@@ -14,9 +16,16 @@ export default function Upload() {
     for (const key of Object.keys(fileUpload)) {
       formData.append("fileUpload", fileUpload[key]);
     }
-    axios.post("/api/upload", formData, {}).then((res) => {
-      console.log(res.data);
-    });
+    axios
+      .post("/api/upload", formData, {
+        onUploadProgress: (data) => {
+          //Set the progress value to show the progress bar
+          setProgress(Math.round((100 * data.loaded) / data.total));
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      });
   };
   return (
     <div className="uploadContainer">
@@ -32,6 +41,7 @@ export default function Upload() {
             />
           </Form.Group>
           <Button type="submit">Upload</Button>
+          {progress && <ProgressBar now={progress} label={`${progress}%`} />}
         </Form>
       </div>
     </div>
