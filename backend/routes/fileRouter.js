@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
     }
   },
 });
-const upload = multer({ storage: storage }).array("fileUpload");
+const upload = multer({ storage: storage }).array("fileUpload"); //fileUpload is the name of the Input Field
 
 //Handling the Fileupload
 //
@@ -71,39 +71,30 @@ router.get("/files", async (req, res) => {
 //Handle deletion
 //
 router.post("/delete", (req, res) => {
-  let keys = Object.keys(req.body);
-
-  console.log("Elements that will be removed: \n" + keys);
+  console.log("Elements that will be removed: \n" + req.body.selectedFiles);
   //remove selected files
-  keys.forEach((key) => {
-    fs.rmSync(dir + "/" + key);
-    File.findOneAndDelete({ fileName: key });
-    console.log("Removed: " + key);
-  });
+  // keys.forEach((key) => {
+  // fs.rmSync(dir + "/" + key);
+  // File.findOneAndDelete({ fileName: key });
+  // console.log("Removed: " + key);
+  // });
   res.status(200).send({ message: "Sucess!" });
 });
 
 //Handle Download
 //
 router.post("/download", (req, res) => {
-  console.log(req.body);
+  if (req.body.selectedFiles.length === 0)
+    return res.status(400).send({ message: "No files selected!" });
+  //check if array is empty or undefined
 
-  let keys = Object.values(req.body);
-  if (keys.length > 0) {
-    let downloadFileArray = keys.map((item) => {
-      return {
-        path: dir + "/" + item,
-        name: item,
-      };
-    });
-
-    if (downloadFileArray[0] != undefined) {
-      res.zip(downloadFileArray);
-    }
-  } else {
-    console.log("Download: No files selected!");
-    res.send({ message: "No files selected!" });
-  }
+  let downloadFileArray = req.body.selectedFiles.map((item) => {
+    return {
+      path: dir + "/" + item,
+      name: item,
+    };
+  });
+  res.zip(downloadFileArray);
 });
 
 export default router;
