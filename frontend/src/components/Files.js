@@ -2,11 +2,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Form, Table, Button } from "react-bootstrap";
 import "../css/checkbox.css";
+import Axios from "axios";
+import FileDownload from "js-file-download";
+import { Confirm } from "react-admin";
 
 export default function Files() {
   const [isLoading, setIsLoading] = useState(true);
   const [files, setFiles] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const getFiles = async () => {
@@ -22,15 +26,41 @@ export default function Files() {
     getFiles();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const onDownload = (e) => {
     e.preventDefault();
 
-    const res = await fetch("/api/download", {
+    Axios({
+      url: "/api/download",
       method: "POST",
-      body: JSON.stringify(selectedFiles),
+      responseType: "blob",
+      data: { selectedFiles },
+    }).then((res) => {
+      res.status === 200
+        ? FileDownload(res.data, "download.zip")
+        : alert("Something went wrong");
     });
-    const file = window.URL.createObjectURL(new Blob([res.data]));
-    window.open(file);
+  };
+
+  const onDelete = (e) => {
+    e.preventDefault();
+
+    Axios({
+      url: "/api/delete",
+      method: "POST",
+      responseType: "blob",
+      data: { selectedFiles },
+    }).then((res) => {
+      setOpen(false);
+    });
+  };
+
+  const handleConfirm = (e) => {
+    e.preventDefault();
+    setOpen(true);
+  };
+
+  const handleClose = (e) => {
+    setOpen(false);
   };
 
   const handleCheckbox = (e) => {
@@ -49,8 +79,23 @@ export default function Files() {
     <div className="filesContainer">
       {isLoading && <h1>Loading Files...</h1>}
       {!isLoading && files !== null && (
-        <Form onSubmit={handleSubmit}>
-          <Button type="submit">Download</Button>
+        <Form>
+          <Confirm
+            isOpen={open}
+            onConfirm={onDelete}
+            onClose={handleClose}
+            content={"This action can not be undone!"}
+            title={"Delete Files"}
+            confirm={"Confirm"}
+            cancel={"Cancel"}
+          />
+          <Button type="submit" onClick={onDownload}>
+            Download
+          </Button>
+
+          <Button type="submit" onClick={handleConfirm}>
+            Delete
+          </Button>
           <Table striped bordered hover variant="dark">
             <thead>
               <tr>
