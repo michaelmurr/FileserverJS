@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+import dayjs from "dayjs";
+
+const DayJS = dayjs();
+
 const fileSchema = mongoose.Schema({
   fileName: {
     type: String,
@@ -12,8 +16,8 @@ const fileSchema = mongoose.Schema({
     required: true,
   },
   uploadDate: {
-    type: Date,
-    default: Date.now,
+    type: String,
+    default: DayJS.format("YYYY-MM-DD_HH:mm:ss"),
   },
 });
 
