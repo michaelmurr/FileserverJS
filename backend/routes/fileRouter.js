@@ -4,7 +4,6 @@ import multer from "multer";
 import express from "express";
 import zip from "express-zip";
 import prettyBytes from "pretty-bytes";
-import mongoose from "mongoose";
 
 import File from "../models/fileSchema.js";
 import getUploadsPath from "../getUploadsPath.js";
@@ -27,13 +26,14 @@ const storage = multer.diskStorage({
   destination: dir,
   filename: function (req, item, cb) {
     if (fs.existsSync(path.join(dir, item.originalname))) {
-      cb(new Error(item.originalname + " already exists!"));
-    } else {
-      cb(null, item.originalname);
+      const filename =
+        item.originalname + "_" + Date.now() + path.extname(item.originalname);
+      return cb(null, filename);
     }
+    cb(null, item.originalname);
   },
 });
-const upload = multer({ storage: storage }).array("fileUpload"); //fileUpload is the name of the Input Field
+const upload = multer({ storage }).array("fileUpload"); //fileUpload is the name of the Input Field
 
 //Handling the Fileupload
 //
@@ -61,23 +61,32 @@ router.post("/upload", async (req, res) => {
   });
 });
 
-//Handle getting Files
+//Handle getting all Files
 //
 router.get("/files", async (req, res) => {
   const files = await File.find({});
   res.status(200).send(files);
 });
 
+//Search for files
+//
+router.get("/search/:searchClause", async (req, res) => {
+  const files = await File.find({
+    fileName: { $regex: req.params.searchClause },
+  });
+  console.log(files);
+  res.send(files);
+});
+
 //Handle deletion
 //
-router.post("/delete", (req, res) => {
-  console.log("Elements that will be removed: \n" + req.body.selectedFiles);
+router.delete("/delete", async (req, res) => {
   //remove selected files
-  // keys.forEach((key) => {
-  // fs.rmSync(dir + "/" + key);
-  // File.findOneAndDelete({ fileName: key });
-  // console.log("Removed: " + key);
-  // });
+  for (const file of req.body.selectedFiles) {
+    fs.rmSync(dir + "/" + file);
+    const res = await File.deleteOne({ fileName: file });
+    console.log("Removed: " + file);
+  }
   res.status(200).send({ message: "Sucess!" });
 });
 
