@@ -1,0 +1,21 @@
+html {
+  padding: 1.5em;
+  background-color: #212529;
+}
+
+.dark-bg {
+  background-color: #212529;
+  color: #efefef;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+  width: 26.5em;
+}
+
+input[type="checkbox"] {
+  width: 1.5em;
+  height: 1.5em;
+}
