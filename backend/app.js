@@ -1,4 +1,5 @@
 import os from "os";
+import hpp from "hpp";
 import cors from "cors";
 import helmet from "helmet";
 import express from "express";
@@ -8,11 +9,16 @@ import mongoose from "mongoose";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
 import path, { dirname } from "path";
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import MongoDBStore from "connect-mongodb-session";
 
 import testRouter from "./routes/testRouter.js";
 import fileRouter from "./routes/fileRouter.js";
+import authRouter from "./routes/authRouter.js";
 
 const PORT = process.env.PORT || 4000;
+const MongoDBSession = MongoDBStore(session);
 const totalCores = os.cpus().length;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,21 +42,37 @@ if (cluster.isPrimary) {
 
   console.log(`Worker started on process ${process.pid}`);
 
-  let corsOptions = {
+  const corsOptions = {
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
   };
 
+  const store = new MongoDBSession({
+    uri: process.env.DB_CONNECTION,
+    collection: "Sessions",
+  });
+
   app.use(helmet());
+  app.use(hpp());
+  app.use(
+    session({
+      resave: false,
+      saveUninitialized: false,
+      secret: process.env.COOKIE_SECRET,
+      store: store,
+    })
+  );
   app.use(cors(corsOptions));
+  app.use(cookieParser());
   app.use(express.static(path.join(__dirname, "public")));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use("/api/test", testRouter);
   app.use("/api", fileRouter);
+  app.use("/api", authRouter);
 
   mongoose
     .connect(process.env.DB_CONNECTION, {
