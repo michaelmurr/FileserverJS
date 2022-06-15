@@ -24,7 +24,7 @@ export default function Upload(props) {
       formData.append("fileUpload", fileUpload[key]);
     }
     try {
-      const res = await Axios.post("/api/upload", formData, {
+      await Axios.post("/api/upload", formData, {
         onUploadProgress: (data) => {
           //Set the progress value to show the progress bar
           setProgress(Math.round((100 * data.loaded) / data.total));
