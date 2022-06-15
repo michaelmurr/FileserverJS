@@ -1,11 +1,11 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
 import { Form, Table, Button } from "react-bootstrap";
-import Axios from "axios";
+import React, { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 import FileDownload from "js-file-download";
 import { Confirm } from "react-admin";
+import Axios from "axios";
 import "../css/app.css";
-import { useNavigate } from "react-router-dom";
 
 export default function Files(props) {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -129,6 +129,7 @@ export default function Files(props) {
           type="text"
           placeholder="Search Files"
           onChange={onSearchChange}
+          className="inputField"
         />
         <Button type="submit" style={{ marginLeft: "1em" }}>
           Search
