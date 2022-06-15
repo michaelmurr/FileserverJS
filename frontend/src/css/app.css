@@ -20,18 +20,15 @@ input[type="checkbox"] {
   height: 1.5em;
 }
 
-.inputField {
-  background-color: #41494f;
-  color: #fefefe;
-
-  border: transparent;
-  padding: 0.5em;
-}
-.inputField::placeholder {
-  color: #a3a3a3;
+.uploadBtn {
+  margin-left: 1em;
+  margin-top: 1em;
+  height: 2.5em;
 }
 
-.inputField:focus {
-  background-color: #41494f;
-  color: #fefefe;
+.progressBar {
+  margin: 2em 0 1em 0;
+  bottom: 0;
+  left: 0;
+  width: 35.5em;
 }
