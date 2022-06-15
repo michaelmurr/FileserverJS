@@ -13,9 +13,9 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import MongoDBStore from "connect-mongodb-session";
 
-import testRouter from "./routes/testRouter.js";
 import fileRouter from "./routes/fileRouter.js";
 import authRouter from "./routes/authRouter.js";
+import statRouter from "./routes/statRouter.js";
 
 const PORT = process.env.PORT || 4000;
 const MongoDBSession = MongoDBStore(session);
@@ -71,9 +71,9 @@ if (cluster.isPrimary) {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  app.use("/api/test", testRouter);
   app.use("/api", fileRouter);
   app.use("/api", authRouter);
+  app.use("/api", statRouter);
 
   mongoose
     .connect(process.env.DB_CONNECTION, {
