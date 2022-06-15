@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  margin-bottom: 0.5em;
+}
+
+.formContainer {
+  margin-top: 4em;
+  width: 45%;
+  background-color: "yellow";
+  border: 3px solid #2a2f33;
+  background-color: #2a2f33;
+  padding: 3em;
+  border-radius: 1em;
+}
+
+.inputField {
+  background-color: #41494f;
+  color: #fefefe;
+
+  border: transparent;
+  padding: 0.8em;
+}
+.inputField::placeholder {
+  color: #a3a3a3;
+}
+
+.inputField:focus {
+  background-color: #41494f;
+  color: #fefefe;
+}
