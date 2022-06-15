@@ -6,9 +6,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const configPath = __dirname + "/storagePath.json";
 
-const getUploadsPath = function () {
-  console.log(configPath);
+const getUploadsPath = () => {
   let PathObj = JSON.parse(fs.readFileSync(configPath));
+  if (!fs.existsSync(PathObj.path)) fs.mkdirSync(PathObj.path);
   return PathObj.path;
 };
 
