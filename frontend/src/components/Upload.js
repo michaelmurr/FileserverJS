@@ -60,27 +60,19 @@ export default function Upload(props) {
               multiple
             />
           </Form.Group>
-          <Button
-            type="submit"
-            style={{ marginLeft: "1em", marginTop: "1em", height: "2.5em" }}
-          >
+          <Button type="submit" className="uploadBtn">
             Upload
           </Button>
-          {progress && (
+        </Form>
+        {progress && (
+          <div>
             <ProgressBar
               now={progress}
               label={`${progress}%`}
-              style={{
-                margin: "2em",
-                marginLeft: "1em",
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                width: "20em",
-              }}
+              className="progressBar"
             />
-          )}
-        </Form>
+          </div>
+        )}
       </div>
     </div>
   );
