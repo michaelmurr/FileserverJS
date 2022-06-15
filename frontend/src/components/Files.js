@@ -1,22 +1,27 @@
-import { Form, Table, Button } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Form, Table, Button } from "react-bootstrap";
+import Axios from "axios";
 import FileDownload from "js-file-download";
 import { Confirm } from "react-admin";
-import Axios from "axios";
 import "../css/app.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Files(props) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [open, setOpen] = useState(false);
   const [searchClause, setSearchClause] = useState("");
   const [files, setFiles] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     getFiles();
   }, [props.shouldUpdate]);
+
+  useEffect(() => {
+    handleResize();
+  }, []);
 
   const getFiles = async () => {
     setFiles([]);
@@ -122,9 +127,17 @@ export default function Files(props) {
     if (res.status === 200) return navigate("/login");
   };
 
+  const handleResize = () => {
+    if (window.innerWidth < 922) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+
   return (
     <div className="filesContainer dark-bg">
-      <Form onSubmit={submitSearch} className="form">
+      <Form onSubmit={submitSearch} className="form searchForm">
         <Form.Control
           type="text"
           placeholder="Search Files"
@@ -173,7 +186,7 @@ export default function Files(props) {
               <th>Select</th>
               <th>Name</th>
               <th>Size</th>
-              <th>Uploaded on</th>
+              {!isMobile && <th>Uploaded on</th>}
             </tr>
           </thead>
           <tbody>
@@ -189,7 +202,7 @@ export default function Files(props) {
                 </td>
                 <td>{file.fileName}</td>
                 <td>{file.fileSize}</td>
-                <td>{file.uploadDate}</td>
+                {!isMobile && <td>{file.uploadDate}</td>}
               </tr>
             ))}
           </tbody>
