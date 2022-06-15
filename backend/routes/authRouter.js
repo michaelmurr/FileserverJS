@@ -56,7 +56,7 @@ router.get("/logout", (req, res) => {
 
   req.session.regenerate((e) => {
     if (e) return res.status(400).send({ e });
-    return res.send(200);
+    return res.status(200).send();
   });
 });
 
