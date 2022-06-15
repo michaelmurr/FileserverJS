@@ -5,16 +5,23 @@ import Axios from "axios";
 import FileDownload from "js-file-download";
 import { Confirm } from "react-admin";
 import "../css/app.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Files(props) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [open, setOpen] = useState(false);
   const [searchClause, setSearchClause] = useState("");
   const [files, setFiles] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getFiles();
+  }, [props.shouldUpdate]);
 
   const getFiles = async () => {
     setFiles([]);
     const res = await fetch("/api/files");
+    if (res.status !== 200) return navigate("login");
     const json = await res.json();
 
     let stuff = JSON.stringify(json);
@@ -23,10 +30,8 @@ export default function Files(props) {
     props.setShouldUpdate(false);
   };
 
-  useEffect(() => {
-    getFiles();
-  }, [props.shouldUpdate]);
-
+  //Handle Download
+  //
   const onDownload = async (e) => {
     e.preventDefault();
     if (selectedFiles.length === 0) {
@@ -47,10 +52,12 @@ export default function Files(props) {
     }
   };
 
+  //Handling deletion
+  //
   const onDelete = async (e) => {
     e.preventDefault();
     try {
-      const res = await Axios({
+      await Axios({
         url: "/api/delete",
         method: "DELETE",
         data: { selectedFiles },
@@ -90,6 +97,8 @@ export default function Files(props) {
     setSelectedFiles(data);
   };
 
+  //Handling search
+  //
   const onSearchChange = async (e) => {
     setSearchClause(e.target.value);
   };
@@ -104,6 +113,13 @@ export default function Files(props) {
     const res = await fetch(`/api/search/${searchClause}`);
     const json = await res.json();
     setFiles(json);
+  };
+
+  //Handle Logging out
+  //
+  const onLogout = async () => {
+    const res = await fetch("/api/logout");
+    if (res.status === 200) return navigate("/login");
   };
 
   return (
@@ -141,6 +157,14 @@ export default function Files(props) {
 
         <Button variant="danger" type="submit" onClick={handleConfirm}>
           Delete
+        </Button>
+        <Button
+          variant="secondary"
+          type="submit"
+          onClick={onLogout}
+          style={{ marginLeft: "1em" }}
+        >
+          Log Out
         </Button>
         <Table hover variant="dark">
           <thead>
