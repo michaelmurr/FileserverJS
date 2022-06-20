@@ -25,9 +25,11 @@ export default function Files(props) {
 
   const getFiles = async () => {
     setFiles([]);
-    const res = await fetch("/api/files");
-    if (res.status !== 200) return navigate("login");
+    const res = await fetch(`${process.env.REACT_APP_API}/api/files`, {
+      credentials: "include",
+    });
     const json = await res.json();
+    if (res.status !== 200) return navigate("/login");
 
     let stuff = JSON.stringify(json);
     let stuff2 = JSON.parse(stuff);
@@ -44,7 +46,8 @@ export default function Files(props) {
     }
     try {
       const res = await Axios({
-        url: "/api/download",
+        url: `${process.env.REACT_APP_API}/api/download`,
+        withCredentials: true,
         method: "POST",
         responseType: "blob",
         data: { selectedFiles },
@@ -52,7 +55,6 @@ export default function Files(props) {
       FileDownload(res.data, "download.zip");
     } catch (e) {
       const json = await JSON.parse(e.request.responseText);
-      console.log(json);
       props.errorToast(json.message);
     }
   };
@@ -63,9 +65,10 @@ export default function Files(props) {
     e.preventDefault();
     try {
       await Axios({
-        url: "/api/delete",
+        url: `${process.env.REACT_APP_API}/api/delete`,
         method: "DELETE",
         data: { selectedFiles },
+        withCredentials: true,
       });
 
       setOpen(false);
@@ -115,7 +118,9 @@ export default function Files(props) {
       return props.setShouldUpdate(true);
     }
     setSelectedFiles([]);
-    const res = await fetch(`/api/search/${searchClause}`);
+    const res = await fetch(
+      `${process.env.REACT_APP_API}/api/search/${searchClause}`
+    );
     const json = await res.json();
     setFiles(json);
   };
@@ -123,7 +128,9 @@ export default function Files(props) {
   //Handle Logging out
   //
   const onLogout = async () => {
-    const res = await fetch("/api/logout");
+    const res = await fetch(`${process.env.REACT_APP_API}/api/logout`, {
+      credentials: "include",
+    });
     if (res.status === 200) return navigate("/login");
   };
 

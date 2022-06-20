@@ -24,11 +24,12 @@ export default function Upload(props) {
       formData.append("fileUpload", fileUpload[key]);
     }
     try {
-      await Axios.post("/api/upload", formData, {
+      await Axios.post(`${process.env.REACT_APP_API}/api/upload`, formData, {
         onUploadProgress: (data) => {
           //Set the progress value to show the progress bar
           setProgress(Math.round((100 * data.loaded) / data.total));
         },
+        withCredentials: true,
       });
       props.successToast("Upload Successful");
       props.setShouldUpdate(true);

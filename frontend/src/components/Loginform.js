@@ -23,13 +23,17 @@ export default function Loginform() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("/api/login", {
+    const res = await fetch(`${process.env.REACT_APP_API}/api/login`, {
       headers: { "Content-Type": "application/json" },
       method: "POST",
+      credentials: "include",
       body: JSON.stringify({ username, password }),
     });
 
-    if (res.status === 200) return navigate("/");
+    if (res.status === 200) {
+      console.log("success");
+      return navigate("/");
+    }
     const json = await res.json();
     errorToast(json.message);
   };

@@ -21,7 +21,7 @@ export default function Registerform() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("/api/register", {
+    const res = await fetch(`${process.env.REACT_APP_API}/api/register`, {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify({ username, password }),

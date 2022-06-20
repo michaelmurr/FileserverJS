@@ -5,10 +5,10 @@ export default function Drivespace() {
 
   useEffect(() => {
     fetchDriveData();
-  });
+  }, []);
 
   const fetchDriveData = async () => {
-    const res = await fetch("/api/drivedata");
+    const res = await fetch(`${process.env.REACT_APP_API}/api/drivedata`);
     const json = await res.json();
     setDriveData(json.prettyStats);
   };
