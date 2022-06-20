@@ -43,7 +43,7 @@ if (cluster.isPrimary) {
   console.log(`Worker started on process ${process.pid}`);
 
   const corsOptions = {
-    origin: "*",
+    origin: "http://localhost:3000",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
