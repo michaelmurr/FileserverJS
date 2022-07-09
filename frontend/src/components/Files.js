@@ -119,7 +119,8 @@ export default function Files(props) {
     }
     setSelectedFiles([]);
     const res = await fetch(
-      `${process.env.REACT_APP_API}/api/search/${searchClause}`
+      `${process.env.REACT_APP_API}/api/search/${searchClause}`,
+      { credentials: "include" }
     );
     const json = await res.json();
     setFiles(json);
